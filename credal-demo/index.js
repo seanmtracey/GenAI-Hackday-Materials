@@ -43,7 +43,7 @@ app.post('/send/:SESSION_UUID', async (req, res) => {
         res.status(404);
         res.json({
             status : "err",
-            message : `Could not find a session with id ${sessionUUID}`
+            message : `Could not find a session with ID "${sessionUUID}"`
         });
     } else {
         
@@ -67,6 +67,48 @@ app.post('/send/:SESSION_UUID', async (req, res) => {
         });
 
 
+    }
+
+});
+
+app.post('/delete-session/:SESSION_UUID', async (req, res) => {
+
+    const sessionUUID = req.params.SESSION_UUID;
+
+    if(!SESSIONS[sessionUUID]){
+        res.status(404);
+        res.json({
+            status : "err",
+            message : `Could not find a session with ID "${sessionUUID}"`
+        });
+
+        return;
+
+    } 
+
+    try {
+        delete SESSIONS[sessionUUID];
+    } catch (err) {
+
+        console.log(err);
+        res.status(500)
+        res.json({
+            status : "err",
+            message : `Could not delete session with ID "${sessionUUID}"`
+        });
+    }
+
+    if(!SESSIONS[sessionUUID]){
+        res.json({
+            status : "ok",
+            message : `Successfully deleted session with ID "${sessionUUID}"`
+        });
+    } else {
+        res.status(500)
+        res.json({
+            status : "err",
+            message : `Tried to delete session with ID "${sessionUUID}", but was unable to confirm deletion`
+        });
     }
 
 });
