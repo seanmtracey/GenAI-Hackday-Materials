@@ -25,6 +25,10 @@ This application uses the Credal API key stored in the environment variables of 
 
 The API key for Credal will be accessed from the `CREDAL_API_KEY` environment variable.
 
+### Obtaining a Credal API Key
+
+To obtain an API key for Credal, you can follow the instructions in [the API_KEY.md](./API_KEY.md) file.
+
 ### Creating a session
 
 To get started, first make a `GET` request to the `/new-session`. This will return a JSON object with the following structure:
