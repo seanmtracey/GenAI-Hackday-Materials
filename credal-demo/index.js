@@ -5,6 +5,8 @@ import { v4 as uuidv4 } from 'uuid';
 import express from 'express';
 import bodyParser from 'body-parser';
 
+const PORT = process.env.PORT || 3000;
+
 const app = express();
 
 app.use(express.static('public'));
@@ -113,7 +115,7 @@ app.post('/delete-session/:SESSION_UUID', async (req, res) => {
 
 });
   
-app.listen(3000);
+app.listen(PORT);
 
 
 
