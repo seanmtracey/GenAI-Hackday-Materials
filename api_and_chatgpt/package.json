@@ -4,13 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@mft/moneyhub-api-client": "^5.8.0",
+    "@mft/moneyhub-api-client": "^5.91.2",
     "body-parser": "^1.20.2",
     "chatgpt": "^5.0.0",
     "dotenv": "^16.3.1",

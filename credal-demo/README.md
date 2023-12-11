@@ -9,6 +9,8 @@ This is some code that will make it easy to get started using the [Credal.AI pla
 1. A computer running macOS/Linux
 2. Node.js >= v16.0.0
 
+## Installation
+
 First up, clone this repo to your system, and then `cd` into the `credal-demo` directory. Next, install the dependencies with `npm install`. Finally, you can start the HTTP server that will accept requests and forward them to GPT-4 via Credal with `npm run start`.
 
 ## Usage
