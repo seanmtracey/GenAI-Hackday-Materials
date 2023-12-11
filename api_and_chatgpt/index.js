@@ -3,13 +3,23 @@
 import _ from './env.js'
 import fs from 'fs';
 import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
 import { Moneyhub } from "@mft/moneyhub-api-client";
 
-import { ChatGPTAPI } from 'chatgpt'
+// import { ChatGPTAPI } from 'chatgpt'
 
-const gptAPI = new ChatGPTAPI({
-    apiKey: process.env.OPENAI_API_KEY
-});
+import { Configuration, OpenAIApi } from "openai";
+
+// const gptAPI = new ChatGPTAPI({
+//     apiKey: process.env.API_KEY
+// });
+
+const OPENAI_CLIENT = new OpenAIApi(
+    new Configuration({
+      apiKey: process.env.API_KEY, // https://app.credal.ai/api-tokens
+      basePath: "https://api.credal.ai/api/openai",
+    }),
+);
 
 const PORT = process.env.PORT || 3000;
 
@@ -23,8 +33,10 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-app.use(express.static('public'))
-app.use(bodyParser.json())
+app.use(express.static('public'));
+app.use(bodyParser.json());
+
+const SESSIONS = {};
 
 const PRIVATE_KEY = JSON.parse(fs.readFileSync(`${__dirname}/private_key.pem`, "utf8"));
 
@@ -90,15 +102,33 @@ app.post('/chat', async (req, res, next) => {
 
     console.log(req.body);
 
-    const response = await gptAPI.sendMessage(req.body.message,{
-        parentMessageId: req.body.parentMessageId
+    if(req.body.parentMessageId === ""){
+        const sessionUUID = uuidv4();
+        SESSIONS[sessionUUID] = [];
+        req.body.parentMessageId = sessionUUID;
+    }
+
+    SESSIONS[req.body.parentMessageId].push({
+        "role" : "user",
+        "content" : req.body.message
     });
 
-    console.log(response.text);
+    console.log(SESSIONS[req.body.parentMessageId]);
+
+    const response = await OPENAI_CLIENT.createChatCompletion({
+        model: "gpt-4",
+        messages: SESSIONS[req.body.parentMessageId],
+    });
+    
+    console.log("OUTPUT:", response);
+    console.log(response.data);
+    console.log(response.data.choices);
+
+    SESSIONS[req.body.parentMessageId].push(response.data.choices[0].message);
 
     res.json({
-        message : response.text,
-        id: response.id
+        message : response.data.choices[0].message.content,
+        id: req.body.parentMessageId
     });
 
 });

@@ -42,6 +42,7 @@ main{
     display: flex;
     flex-direction: column;
     padding-bottom: 3em;
+    width: 100%;
 }
 
 #transcript div{
@@ -148,6 +149,9 @@ form input[type="text"]{
     padding-bottom: 0.5em;
 }
 
+#transactions ol li[data-selected="true"]{
+    background-color: #a0ff99;
+}
 
 #transactions li h4{
     margin: 0;
